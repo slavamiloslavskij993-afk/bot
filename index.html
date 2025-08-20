@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Викторина - Получи фрибет!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .quiz-container {
+            padding: 30px;
+        }
+
+        .question {
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .question.active {
+            display: block;
+        }
+
+        .question h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .option {
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1em;
+        }
+
+        .option:hover {
+            border-color: #667eea;
+            background-color: #f8f9ff;
+            transform: translateY(-2px);
+        }
+
+        .option.selected {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress {
+            width: 100%;
+            height: 8px;
+            background-color: #e1e5e9;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+            width: 0%;
+        }
+
+        .welcome {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .welcome h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .welcome p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.2em;
+            line-height: 1.6;
+        }
+
+        .start-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.3em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .results {
+            text-align: center;
+            padding: 40px 20px;
+            display: none;
+        }
+
+        .results h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .score {
+            font-size: 1.5em;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .message {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .quiz-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Викторина</h1>
+            <p>Проверь свои знания и получи фрибет!</p>
+        </div>
+
+        <div class="quiz-container">
+            <!-- Приветствие -->
+            <div class="welcome" id="welcome">
+                <h2>Добро пожаловать!</h2>
+                <p>Ответьте на все вопросы правильно и получите промокод на фрибет. У вас есть только одна попытка!</p>
+                <button class="start-btn" onclick="startQuiz()">🚀 Начать викторину</button>
+            </div>
+
+            <!-- Прогресс -->
+            <div class="progress" id="progress" style="display: none;">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Вопросы -->
+            <div id="questions"></div>
+
+            <!-- Навигация -->
+            <div class="navigation" id="navigation" style="display: none;">
+                <button class="btn btn-secondary" id="prevBtn" onclick="previousQuestion()">← Назад</button>
+                <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Далее →</button>
+            </div>
+
+            <!-- Результаты -->
+            <div class="results" id="results">
+                <h2>Результаты</h2>
+                <div class="score" id="score"></div>
+                <div class="message" id="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let questions = [];
+        let currentQuestion = 0;
+        let answers = [];
+        let sessionId = '';
+
+        // Получаем sessionId из URL
+        function getSessionId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('sessionId');
+        }
+
+        // Загружаем вопросы
+        async function loadQuestions() {
+            try {
+                const response = await fetch('/api/questions');
+                const data = await response.json();
+                questions = data.questions;
+                answers = new Array(questions.length).fill(null);
+            } catch (error) {
+                console.error('Ошибка загрузки вопросов:', error);
+                alert('Ошибка загрузки вопросов. Попробуйте обновить страницу.');
+            }
+        }
+
+        // Начинаем викторину
+        function startQuiz() {
+            sessionId = getSessionId();
+            if (!sessionId) {
+                alert('Ошибка: не найден ID сессии. Вернитесь в бота и попробуйте снова.');
+                return;
+            }
+
+            document.getElementById('welcome').style.display = 'none';
+            document.getElementById('progress').style.display = 'block';
+            document.getElementById('navigation').style.display = 'flex';
+            
+            showQuestion();
+            updateProgress();
+        }
+
+        // Показываем вопрос
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            const questionsContainer = document.getElementById('questions');
+            
+            questionsContainer.innerHTML = `
+                <div class="question active">
+                    <h2>Вопрос ${currentQuestion + 1} из ${questions.length}</h2>
+                    <p>${question.question}</p>
+                    <div class="options">
+                        ${question.options.map((option, index) => `
+                            <div class="option ${answers[currentQuestion] === index ? 'selected' : ''}" 
+                                 onclick="selectOption(${index})">
+                                ${option}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+
+            updateNavigation();
+        }
+
+        // Выбираем вариант ответа
+        function selectOption(optionIndex) {
+            answers[currentQuestion] = optionIndex;
+            
+            // Обновляем UI
+            const options = document.querySelectorAll('.option');
+            options.forEach((option, index) => {
+                option.classList.toggle('selected', index === optionIndex);
+            });
+
+            updateNavigation();
+        }
+
+        // Следующий вопрос
+        function nextQuestion() {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                showQuestion();
+                updateProgress();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        // Предыдущий вопрос
+        function previousQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                showQuestion();
+                updateProgress();
+            }
+        }
+
+        // Обновляем навигацию
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            prevBtn.disabled = currentQuestion === 0;
+            nextBtn.disabled = answers[currentQuestion] === null;
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.textContent = 'Завершить';
+            } else {
+                nextBtn.textContent = 'Далее →';
+            }
+        }
+
+        // Обновляем прогресс
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        // Отправляем результаты
+        async function submitQuiz() {
+            try {
+                const response = await fetch('/api/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        sessionId: sessionId,
+                        answers: answers
+                    })
+                });
+
+                if (response.ok) {
+                    showResults();
+                } else {
+                    throw new Error('Ошибка отправки результатов');
+                }
+            } catch (error) {
+                console.error('Ошибка:', error);
+                alert('Ошибка отправки результатов. Попробуйте еще раз.');
+            }
+        }
+
+        // Показываем результаты
+        function showResults() {
+            const correctCount = answers.filter((answer, index) => 
+                answer === questions[index].answerIndex
+            ).length;
+            
+            const total = questions.length;
+            const percentage = Math.round((correctCount / total) * 100);
+            
+            document.getElementById('questions').style.display = 'none';
+            document.getElementById('navigation').style.display = 'none';
+            document.getElementById('progress').style.display = 'none';
+            
+            document.getElementById('score').textContent = `${correctCount} из ${total} (${percentage}%)`;
+            
+            if (correctCount === total) {
+                document.getElementById('message').textContent = 
+                    '🎉 Поздравляем! Все ответы верны! Промокод отправлен в бот.';
+            } else {
+                document.getElementById('message').textContent = 
+                    'Спасибо за участие! Вы автоматически участвуете в розыгрыше.';
+            }
+            
+            document.getElementById('results').style.display = 'block';
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', function() {
+            loadQuestions();
+        });
+    </script>
+</body>
+</html>

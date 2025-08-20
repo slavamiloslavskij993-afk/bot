@@ -1,0 +1,52 @@
+[
+  {
+    "question": "Какая команда используется для создания нового репозитория Git?",
+    "options": [
+      "git init",
+      "git clone",
+      "git add",
+      "git commit"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "Какой язык программирования используется для создания Telegram ботов?",
+    "options": [
+      "Python",
+      "JavaScript",
+      "Java",
+      "Все перечисленные"
+    ],
+    "answerIndex": 3
+  },
+  {
+    "question": "Что означает HTTP?",
+    "options": [
+      "HyperText Transfer Protocol",
+      "High Tech Transfer Protocol",
+      "Home Transfer Protocol",
+      "Host Transfer Protocol"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "Какой тег HTML используется для создания заголовка первого уровня?",
+    "options": [
+      "<h1>",
+      "<header>",
+      "<title>",
+      "<head>"
+    ],
+    "answerIndex": 0
+  },
+  {
+    "question": "Что такое API?",
+    "options": [
+      "Application Programming Interface",
+      "Advanced Programming Interface",
+      "Automated Programming Interface",
+      "All Programming Interface"
+    ],
+    "answerIndex": 0
+  }
+]
